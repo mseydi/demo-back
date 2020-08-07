@@ -1,7 +1,10 @@
 package com.seydi.demo;
 
 import com.seydi.demo.dao.CompteRepository;
+import com.seydi.demo.dao.OperationRepository;
 import com.seydi.demo.entities.Compte;
+import com.seydi.demo.entities.Operation;
+import com.seydi.demo.metier.BankOperationMetier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +14,11 @@ import java.util.Date;
 
 @SpringBootApplication
 public class DemoBackApplication implements CommandLineRunner {
-   @Autowired
+    @Autowired
 	CompteRepository compteRepository;
+    @Autowired
+	OperationRepository operationRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoBackApplication.class, args);
 
@@ -29,6 +35,8 @@ public class DemoBackApplication implements CommandLineRunner {
 		compteRepository.findAll().forEach((c->{
 			System.out.println(c.toString());
 	}));
+
+
 }
 
 }

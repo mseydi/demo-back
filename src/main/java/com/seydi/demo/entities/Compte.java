@@ -7,22 +7,62 @@ import lombok.ToString;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @ToString
-public class Compte {
+public class Compte implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long idCompte;
+    @GeneratedValue
+    private  String codeCompte;
     private String titulaire;
     private double solde;
     private Date dateCreation;
     private boolean etat;
-    @OneToMany(mappedBy="compte")
-    private Collection<Operation> operations;
+    @OneToMany(mappedBy="compte",fetch = FetchType.EAGER)
+    private List<Operation> operations;
+
+    public Compte(){
+        super();
+    }
+    public Compte(String titulaire, String codeCompte, Date dateCreation, double solde ) {
+        super();
+        this.titulaire = titulaire;
+        this.codeCompte = codeCompte;
+        this.dateCreation = dateCreation;
+        this.solde = solde;
+    }
+
+
+    public String getCodeCompte() {
+        return codeCompte;
+    }
+
+    public void setCodeCompte( String codeCompte ) {
+        this.codeCompte = codeCompte;
+    }
+
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation( Date dateCreation ) {
+        this.dateCreation = dateCreation;
+    }
+
+    public double getSolde() {
+        return solde;
+    }
+
+    public void setSolde( double solde ) {
+        this.solde = solde;
+    }
+
+
 }
