@@ -19,6 +19,7 @@ public class DemoBackApplication implements CommandLineRunner {
     @Autowired
 	OperationRepository operationRepository;
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoBackApplication.class, args);
 
@@ -32,9 +33,9 @@ public class DemoBackApplication implements CommandLineRunner {
 		compteRepository.save(new Compte(null, "Ami",10000, new Date(01-20-2020),true,""));
 		compteRepository.save(new Compte(null, "Ouz",7000, new Date(15-20-2020),false,""));*/
 
-		compteRepository.findAll().forEach((c->{
-			System.out.println(c.toString());
-	}));
+//		compteRepository.findAll().forEach((c->{
+//			System.out.println(c.toString());
+//	}));
 
 
 }

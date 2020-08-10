@@ -13,17 +13,18 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
-
+@Service
+@Transactional
 public interface BankOperationMetier {
     public Compte consulterCompte(String codeCompte);
 
     // Operation verssement
-    public void verser( String code, double montant);
+    public boolean verser( String code, double montant);
 
     // retirer
-    public void retirer( String code, double montant );
+    public boolean retirer( String code, double montant );
 
-    public Page<Operation> listOperations(String codeCompte, int page, int size );
+    public PageOperation listOperations(String codeCompte, int page, int size );
 
 
 }

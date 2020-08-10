@@ -17,6 +17,9 @@ public class PageOperation implements Serializable {
 
 
     // get & set
+    public List<Operation> listOperations() {
+        return operations;
+    }
     public List<Operation> getOperations() {
         return operations;
     }

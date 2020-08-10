@@ -9,65 +9,91 @@ import com.seydi.demo.entities.Versement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
-public class BanOperationMetierImpl implements BankOperationMetier{
+@Service
+public class BanOperationMetierImpl {
     @Autowired
     private OperationRepository operationRepository;
     @Autowired
     private CompteRepository compteRepository;
-    private BankOperationMetier bankOperationMetier ;
-   // @Transactional
-   // si tous ce passe bien la transaction et faite
-    public  void verser(String codeCompte, double montant) {
-        Compte cp = bankOperationMetier.consulterCompte(codeCompte);
-        Operation o = new Versement(new Date(),montant);
+
+
+
+
+    @Transactional
+    public  boolean verser(String codeCompte, double montant) {
+        Compte cp = compteRepository.getOne(codeCompte);
+        Operation o = new Versement();
+        o.setDateOperation(new Date());
+        o.setMontant(montant);
+        o.setCompte(cp);
         operationRepository.save( o );
         cp.setSolde( cp.getSolde() + montant );
+        return true;
 
 
     }
 
-   // @Transactional
-    public  void retirer(String codeCompte, double montant) {
-        Compte cp = bankOperationMetier.consulterCompte(codeCompte);
+   @Transactional
+    public  boolean retirer(String codeCompte, double montant) {
+        Compte cp = compteRepository.findById(codeCompte).get();
         if(cp.getSolde()<montant)throw  new RuntimeException("Solde Insufisant");
-        Operation o = new Retrait(new Date(),montant);
+        Operation o = new Versement();
+        o.setDateOperation(new Date());
+        o.setMontant(montant);
+        o.setCompte(cp);
         operationRepository.save( o );
         cp.setSolde( cp.getSolde() - montant );
-
+        return true;
 
     }
 
-    @Override
-    public Page<Operation> listOperations(String codeCompte, int page, int size) {
-        return operationRepository.listOperation(codeCompte,PageRequest.of(page, size, Sort.by("")));
-    }
+
+  /* public PageOperation getOperations(String codeCompte, int page, int size) {
+      *//*Page<Operation> ops = operationRepository.getOperation(codeCompte, page,size);
+       PageOperation pOp = new PageOperation();
+      pOp.setOperations(ops.getContent());
+      pOp.setNmbreOperations(ops.getNumberOfElements());
+      pOp.setPage(ops.getNumber());
+      pOp.setTotalPages(ops.getTotalPages());*//*
+       Compte cp = compteRepository.findById( codeCompte ).get();
+       //PageOperation pOp = new PageOperation();
+       Page<Operation> ops = operationRepository.findByCompte(cp, Pageable.unpaged());
+      return (PageOperation) ops;
 
 
-//    public static PageOperation getOperations(String codeCompte, int page, int size) {
-//
-//        Page<Operation> ops = operationRepository.getOperations( codeCompte, new PageRequest( page, size ) );
-//
-//        PageOperation pOp = new PageOperation();
-//        pOp.setOperations( ops.getContent() ); // get content retourne la liste
-//        // des operations
-//        pOp.setNmbreOperations( ops.getNumberOfElements() ); // nombre
-//        // operations
-//        pOp.setPage( page ); // ops.getNumber()
-//        pOp.setTotalPages( ops.getTotalPages() );
-//        pOp.setTotalOperations((int) ops.getTotalElements() );
-//        return pOp;
-//
+    }*/
+/*  public PageOperation getOperations(String codeCompte, int page, int size) {
+      Page<Operation> ops = operationRepository.getOperation(codeCompte, page,size);
+       PageOperation pOp = new PageOperation();
+      pOp.setOperations(ops.getContent());
+      pOp.setNmbreOperations(ops.getNumberOfElements());
+      pOp.setPage(ops.getNumber());
+      pOp.setTotalPages(ops.getTotalPages());
+      Compte cp = compteRepository.findById( codeCompte ).get();
+      return (PageOperation) ops;
+
+
+  }*/
+
+
+//    public List<Operation> listOperations(Compte cp) {
+//        return operationRepository.findByCompte(cp);
 //    }
 
-    @Override
+
+
+
     public Compte consulterCompte(String codeCompte) {
         Compte cp = compteRepository.findById(codeCompte).get();
         if(cp==null) throw  new RuntimeException("Compte innexistant");
-            return  cp;
+            return cp;
     }
 }
